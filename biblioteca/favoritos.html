@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-tema="escuro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark light" />
+  <title>Biblioteca Digital · Favoritos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/base.css" />
+</head>
+<body>
+  <div class="orbs" aria-hidden="true">
+    <span class="orb orb--amber"></span>
+    <span class="orb orb--violet"></span>
+    <span class="orb orb--cyan"></span>
+  </div>
+
+  <div data-header></div>
+
+  <main class="page">
+    <header class="center stack-8" style="padding: 8px 0 12px;">
+      <span class="badge badge--violet">Minha Coleção</span>
+      <h1 class="h1">Livros <span class="h1__grad">favoritos</span></h1>
+      <p class="lead">Sua coleção pessoal, guardada no seu navegador.</p>
+    </header>
+
+    <div class="row" id="acoes" style="justify-content: space-between; margin-bottom: 22px;">
+      <span class="muted" id="contador" style="font-size:13.5px;"></span>
+      <button type="button" class="btn btn--danger" id="btnLimpar">
+        <span class="btn__icon">🗑️</span> Limpar tudo
+      </button>
+    </div>
+
+    <section id="areaFavoritos"></section>
+  </main>
+
+  <div data-footer></div>
+
+  <script src="js/shared.js"></script>
+  <script src="js/favoritos.js"></script>
+
+  <style>
+    .books-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+    }
+    @media (max-width: 520px) { .books-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; } }
+
+    .book-card {
+      display: flex; flex-direction: column;
+      background: var(--surface);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      text-decoration: none;
+      color: var(--txt);
+      transition: transform 0.22s var(--ease), border-color 0.24s, box-shadow 0.24s;
+      animation: aparecer 0.4s var(--ease) backwards;
+      position: relative;
+    }
+    .book-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(251, 191, 36, 0.45);
+      box-shadow: 0 24px 50px -28px rgba(251, 191, 36, 0.7);
+    }
+    .book-card__cover {
+      aspect-ratio: 2 / 3;
+      background: linear-gradient(135deg, rgba(251,191,36,.15), rgba(167,139,250,.15));
+      overflow: hidden; display: flex; align-items: center; justify-content: center;
+    }
+    .book-card__cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .book-card__cover-fallback { font-size: 48px; opacity: 0.5; }
+    .book-card__body { padding: 14px 16px 18px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+    .book-card__title {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 15.5px; font-weight: 600; line-height: 1.3;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .book-card__author { font-size: 12.5px; color: var(--txt-muted); }
+    .book-card__meta {
+      margin-top: auto; padding-top: 10px;
+      display: flex; align-items: center; justify-content: space-between;
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 11px; color: var(--txt-muted);
+    }
+    .book-card__remove {
+      width: 30px; height: 30px;
+      display: inline-flex; align-items: center; justify-content: center;
+      border-radius: 8px;
+      background: rgba(251,113,133,.1);
+      border: 1px solid rgba(251,113,133,.3);
+      color: var(--red);
+      font-size: 14px; cursor: pointer;
+      transition: transform 0.16s, background 0.2s;
+    }
+    .book-card__remove:hover { transform: scale(1.12); background: rgba(251,113,133,.22); }
+  </style>
+</body>
+</html>

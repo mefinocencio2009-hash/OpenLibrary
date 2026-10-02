@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-tema="escuro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark light" />
+  <title>Biblioteca Digital · Detalhes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/base.css" />
+</head>
+<body>
+  <div class="orbs" aria-hidden="true">
+    <span class="orb orb--amber"></span>
+    <span class="orb orb--violet"></span>
+    <span class="orb orb--cyan"></span>
+  </div>
+
+  <div data-header></div>
+
+  <main class="page page--narrow">
+    <div id="areaDetalhes" aria-live="polite" aria-atomic="true"></div>
+  </main>
+
+  <div data-footer></div>
+
+  <script src="js/shared.js"></script>
+  <script src="js/detalhes.js"></script>
+
+  <style>
+    /* Cabeçalho do livro */
+    .book-hero {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 32px;
+      align-items: start;
+      animation: aparecer 0.5s var(--ease);
+    }
+    @media (max-width: 720px) {
+      .book-hero { grid-template-columns: 1fr; gap: 20px; }
+    }
+
+    .book-hero__cover {
+      aspect-ratio: 2 / 3;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(251,191,36,.15), rgba(167,139,250,.15));
+      box-shadow: 0 30px 60px -30px rgba(0,0,0,.8);
+      position: relative;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .book-hero__cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .book-hero__cover-fallback { font-size: 80px; opacity: 0.4; }
+
+    .book-hero__body { display: flex; flex-direction: column; gap: 14px; padding-top: 4px; }
+
+    .book-hero__badges { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .book-hero__title {
+      font-family: 'Lora', Georgia, serif;
+      font-size: clamp(26px, 4.4vw, 42px);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+    .book-hero__author {
+      font-size: 16px; color: var(--amber); font-weight: 600;
+    }
+    .book-hero__author a { color: inherit; text-decoration: none; }
+    .book-hero__author a:hover { text-decoration: underline; }
+
+    .book-hero__desc {
+      font-size: 15px; line-height: 1.7;
+      color: var(--txt-muted);
+      font-family: 'Lora', Georgia, serif;
+      display: -webkit-box;
+      -webkit-line-clamp: 6;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .book-hero__desc.is-expandido { -webkit-line-clamp: unset; }
+    .btn-toggle-desc {
+      background: none; border: 0;
+      color: var(--cyan);
+      font-family: inherit; font-size: 13px; font-weight: 600;
+      cursor: pointer; padding: 0; text-decoration: underline;
+      align-self: flex-start;
+    }
+
+    .book-hero__actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
+
+    /* Grid de informações */
+    .book-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .info-cell {
+      padding: 14px 16px;
+      background: var(--surface);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+    }
+    .info-cell__label {
+      font-size: 10.5px; font-weight: 700; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--txt-muted);
+      margin-bottom: 6px;
+    }
+    .info-cell__value {
+      font-size: 15px; font-weight: 600; color: var(--txt);
+      font-variant-numeric: tabular-nums;
+      word-break: break-word;
+    }
+
+    /* Tags de assunto */
+    .subjects {
+      display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px;
+    }
+    .subject-tag {
+      padding: 6px 12px;
+      font-size: 12px; font-weight: 600;
+      border-radius: 999px;
+      background: rgba(167, 139, 250, 0.12);
+      border: 1px solid rgba(167, 139, 250, 0.35);
+      color: var(--violet);
+      text-decoration: none;
+      transition: transform 0.16s, background 0.2s;
+    }
+    .subject-tag:hover { transform: translateY(-2px); background: rgba(167,139,250,.22); }
+
+    /* Botão de favorito grande */
+    .btn-fav-grande {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 18px; border-radius: var(--radius);
+      background: var(--surface);
+      border: 1px solid var(--stroke-strong);
+      color: var(--txt);
+      font-family: inherit; font-size: 14px; font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.16s, background 0.2s, border-color 0.2s, color 0.2s;
+    }
+    .btn-fav-grande:hover { transform: translateY(-2px); border-color: rgba(251,191,36,.5); }
+    .btn-fav-grande.is-active {
+      background: rgba(251, 191, 36, 0.15);
+      border-color: rgba(251, 191, 36, 0.6);
+      color: var(--amber);
+    }
+  </style>
+</body>
+</html>

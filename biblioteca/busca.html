@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-tema="escuro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark light" />
+  <title>Biblioteca Digital · Busca</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/base.css" />
+</head>
+<body>
+  <div class="orbs" aria-hidden="true">
+    <span class="orb orb--amber"></span>
+    <span class="orb orb--violet"></span>
+    <span class="orb orb--cyan"></span>
+  </div>
+
+  <div data-header></div>
+
+  <main class="page">
+    <!-- Formulário de busca -->
+    <section class="card card--pad-lg stack">
+      <form id="formBusca" class="search-form" role="search" novalidate>
+        <div class="search-form__row">
+          <div class="search-form__input-wrap">
+            <span class="search-form__icon" aria-hidden="true">🔍</span>
+            <input
+              id="termo"
+              type="search"
+              class="field-input"
+              placeholder="Título, autor, assunto ou ISBN…"
+              autocomplete="off"
+              aria-label="Termo de busca"
+            />
+          </div>
+
+          <div class="search-form__select-wrap">
+            <select id="campo" class="field-input" aria-label="Campo de busca">
+              <option value="">Todos os campos</option>
+              <option value="title">Título</option>
+              <option value="author">Autor</option>
+              <option value="subject">Assunto</option>
+              <option value="isbn">ISBN</option>
+            </select>
+          </div>
+
+          <div class="search-form__select-wrap">
+            <select id="ordenacao" class="field-input" aria-label="Ordenar por">
+  <option value="">Relevância (padrão)</option>
+  <option value="new">Mais recentes</option>
+  <option value="old">Mais antigos</option>
+  <option value="editions">Mais edições</option>
+  <option value="random">Aleatório</option>
+</select>
+          </div>
+
+          <button type="submit" class="btn btn--primary" id="btnBuscar">
+            <span class="btn__icon">🔎</span>
+            <span class="btn__text">Buscar</span>
+          </button>
+        </div>
+
+        <div class="search-form__chips">
+          <span class="muted" style="font-size:12px;">Sugestões:</span>
+          <button type="button" class="chip-btn" data-busca="dom casmurro">Dom Casmurro</button>
+          <button type="button" class="chip-btn" data-busca="1984 orwell">1984</button>
+          <button type="button" class="chip-btn" data-busca="stephen king">Stephen King</button>
+          <button type="button" class="chip-btn" data-busca="filosofia">Filosofia</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Info de resultados -->
+    <section id="infoResultados" class="result-info is-hidden" aria-live="polite"></section>
+
+    <!-- Grid de resultados -->
+    <section id="areaResultados" aria-live="polite" aria-atomic="true"></section>
+
+    <!-- Paginação -->
+    <nav id="paginacao" class="pagination is-hidden" aria-label="Paginação"></nav>
+  </main>
+
+  <div data-footer></div>
+
+  <script src="js/shared.js"></script>
+  <script src="js/busca.js"></script>
+
+  <style>
+    .search-form { display: flex; flex-direction: column; gap: 14px; }
+    .search-form__row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr auto;
+      gap: 12px;
+      align-items: stretch;
+    }
+    @media (max-width: 860px) {
+      .search-form__row { grid-template-columns: 1fr 1fr; }
+      .search-form__row .search-form__input-wrap { grid-column: 1 / -1; }
+      .search-form__row .btn { grid-column: 1 / -1; }
+    }
+
+    .search-form__input-wrap { position: relative; display: flex; align-items: center; }
+    .search-form__icon {
+      position: absolute; left: 16px; font-size: 17px; pointer-events: none;
+      filter: drop-shadow(0 0 8px rgba(251,191,36,.45));
+    }
+    .search-form__input-wrap .field-input { padding-left: 46px; }
+
+    .search-form__select-wrap { position: relative; }
+    .search-form__select-wrap .field-input {
+      appearance: none; cursor: pointer;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path fill='%238b98c4' d='M6 8L2 4h8z'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+    }
+    .search-form__select-wrap .field-input option { background: #0a0f1f; color: #eaefff; }
+
+    .search-form__chips { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .chip-btn {
+      padding: 6px 12px; border-radius: 999px; cursor: pointer;
+      font-family: inherit; font-size: 12.5px; font-weight: 600;
+      color: var(--txt-muted);
+      background: var(--surface);
+      border: 1px solid var(--stroke);
+      transition: transform 0.16s, background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .chip-btn:hover {
+      transform: translateY(-2px);
+      color: var(--amber);
+      border-color: rgba(251, 191, 36, 0.5);
+      background: rgba(251, 191, 36, 0.1);
+    }
+
+    .result-info {
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+      padding: 14px 20px;
+      border-radius: var(--radius);
+      background: var(--surface);
+      border: 1px solid var(--stroke);
+      font-size: 13.5px;
+      color: var(--txt-muted);
+    }
+    .result-info b { color: var(--txt); font-weight: 700; }
+
+    /* Grid de livros */
+    .books-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+    }
+    @media (max-width: 520px) { .books-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; } }
+
+    .book-card {
+      display: flex; flex-direction: column; gap: 12px;
+      background: var(--surface);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      text-decoration: none;
+      color: var(--txt);
+      transition: transform 0.22s var(--ease), border-color 0.24s, box-shadow 0.24s;
+      animation: aparecer 0.4s var(--ease) backwards;
+    }
+    .book-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(251, 191, 36, 0.45);
+      box-shadow: 0 24px 50px -28px rgba(251, 191, 36, 0.7);
+    }
+
+    .book-card__cover {
+      aspect-ratio: 2 / 3;
+      background: linear-gradient(135deg, rgba(251,191,36,.15), rgba(167,139,250,.15));
+      position: relative;
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .book-card__cover img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      transition: transform 0.5s var(--ease);
+    }
+    .book-card:hover .book-card__cover img { transform: scale(1.06); }
+    .book-card__cover-fallback {
+      font-size: 48px; opacity: 0.5;
+      filter: drop-shadow(0 0 20px rgba(251,191,36,.5));
+    }
+
+    .book-card__body {
+      padding: 14px 16px 18px;
+      display: flex; flex-direction: column; gap: 6px;
+      flex: 1;
+    }
+    .book-card__title {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 15.5px; font-weight: 600; line-height: 1.3;
+      color: var(--txt);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      letter-spacing: -0.01em;
+    }
+    .book-card__author {
+      font-size: 12.5px; color: var(--txt-muted);
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .book-card__meta {
+      margin-top: auto;
+      padding-top: 10px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 8px;
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 11px;
+      color: var(--txt-muted);
+    }
+    .book-card__year { opacity: 0.7; }
+
+    .book-card__fav {
+      width: 30px; height: 30px;
+      display: inline-flex; align-items: center; justify-content: center;
+      border-radius: 8px;
+      background: rgba(0,0,0,0.35);
+      border: 1px solid var(--stroke);
+      color: var(--txt-muted);
+      font-size: 14px; cursor: pointer;
+      transition: transform 0.16s, background 0.2s, color 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .book-card__fav:hover { transform: scale(1.12); color: var(--amber); }
+    .book-card__fav.is-active { color: var(--amber); background: rgba(251,191,36,.15); border-color: rgba(251,191,36,.5); }
+
+    /* Paginação */
+    .pagination { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; }
+    .page-btn {
+      min-width: 38px; height: 38px; padding: 0 12px;
+      display: inline-flex; align-items: center; justify-content: center;
+      border-radius: 10px;
+      background: var(--surface);
+      border: 1px solid var(--stroke);
+      color: var(--txt);
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 13px; font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.16s, background 0.2s, border-color 0.2s, color 0.2s;
+    }
+    .page-btn:hover:not(:disabled):not(.is-active) {
+      transform: translateY(-2px);
+      border-color: rgba(251,191,36,.5);
+      color: var(--amber);
+    }
+    .page-btn.is-active {
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      color: #1a1000;
+      border-color: transparent;
+    }
+    .page-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    /* Skeleton de cards */
+    .skeleton-book {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background: var(--surface);
+      border: 1px solid var(--stroke);
+      display: flex; flex-direction: column;
+    }
+    .skeleton-book__cover {
+      aspect-ratio: 2 / 3;
+      background: linear-gradient(90deg, rgba(255,255,255,.04) 25%, rgba(255,255,255,.1) 50%, rgba(255,255,255,.04) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+    .skeleton-book__body { padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+    .skeleton-book__line { height: 12px; border-radius: 6px; background: linear-gradient(90deg, rgba(255,255,255,.04) 25%, rgba(255,255,255,.1) 50%, rgba(255,255,255,.04) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+    .skeleton-book__line--lg { height: 16px; width: 80%; }
+    .skeleton-book__line--sm { height: 10px; width: 50%; }
+  </style>
+</body>
+</html>

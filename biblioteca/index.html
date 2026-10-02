@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-tema="escuro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark light" />
+  <meta name="description" content="Biblioteca Digital — explore milhões de livros via API Open Library." />
+  <title>Biblioteca Digital · Início</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/base.css" />
+</head>
+<body>
+  <div class="orbs" aria-hidden="true">
+    <span class="orb orb--amber"></span>
+    <span class="orb orb--violet"></span>
+    <span class="orb orb--cyan"></span>
+  </div>
+
+  <div data-header></div>
+
+  <main class="page">
+    <!-- Hero -->
+    <section class="hero">
+      <span class="badge badge--amber">SA2 · Consumo de API</span>
+      <h1 class="h1">
+        Descubra o mundo<br />
+        <span class="h1__grad">através dos livros.</span>
+      </h1>
+      <p class="lead">
+        Explore <b>milhões</b> de obras do acervo da <b>Open Library</b> — busque
+        por título, autor ou ISBN e mergulhe no universo da leitura.
+      </p>
+
+      <!-- Busca rápida -->
+      <form id="formRapida" class="hero__search" action="busca.html" method="get" role="search">
+        <span class="hero__search-icon" aria-hidden="true">🔍</span>
+        <input
+          id="buscaRapida"
+          name="q"
+          type="search"
+          class="hero__input"
+          placeholder="Busque por título, autor ou assunto…"
+          autocomplete="off"
+          aria-label="Buscar livros"
+        />
+        <button type="submit" class="btn btn--primary">
+          <span class="btn__icon">🔎</span> Buscar
+        </button>
+      </form>
+
+      <div class="hero__chips">
+        <span class="muted" style="font-size:12.5px;">Populares:</span>
+        <button type="button" class="chip-btn" data-busca="harry potter">Harry Potter</button>
+        <button type="button" class="chip-btn" data-busca="tolkien">Tolkien</button>
+        <button type="button" class="chip-btn" data-busca="machado de assis">Machado de Assis</button>
+        <button type="button" class="chip-btn" data-busca="science fiction">Ficção Científica</button>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="stack-16">
+      <h2 class="h2">O que você encontra aqui</h2>
+      <div class="grid grid--3">
+        <article class="card feature">
+          <span class="feature__icon">📚</span>
+          <h3 class="card__title">Acervo imenso</h3>
+          <p class="card__subtitle">
+            Milhões de obras catalogadas, de clássicos a lançamentos.
+          </p>
+        </article>
+        <article class="card feature">
+          <span class="feature__icon">🖼️</span>
+          <h3 class="card__title">Capas e detalhes</h3>
+          <p class="card__subtitle">
+            Veja capas em alta resolução, sinopses, anos e assuntos.
+          </p>
+        </article>
+        <article class="card feature">
+          <span class="feature__icon">⭐</span>
+          <h3 class="card__title">Sua coleção</h3>
+          <p class="card__subtitle">
+            Salve seus livros favoritos — ficam guardados no seu navegador.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="stats">
+      <div class="stat">
+        <span class="stat__value">∞</span>
+        <span class="stat__label">Livros disponíveis</span>
+      </div>
+      <div class="stat">
+        <span class="stat__value">100%</span>
+        <span class="stat__label">JavaScript puro</span>
+      </div>
+      <div class="stat">
+        <span class="stat__value">0</span>
+        <span class="stat__label">Frameworks</span>
+      </div>
+      <div class="stat">
+        <span class="stat__value">API</span>
+        <span class="stat__label">Open Library</span>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="card card--pad-lg center">
+      <h2 class="h2" style="margin-bottom:12px">Pronto para explorar?</h2>
+      <p class="lead" style="margin-bottom:22px">
+        Comece buscando por um título que você ama — ou deixe-se surpreender.
+      </p>
+      <a href="busca.html" class="btn btn--primary btn--lg">
+        <span class="btn__icon">📖</span> Explorar acervo
+      </a>
+    </section>
+  </main>
+
+  <div data-footer></div>
+
+  <script src="js/shared.js"></script>
+  <script>
+    // Busca rápida: chips preenchem o input
+    document.querySelectorAll('.chip-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.getElementById('buscaRapida').value = btn.dataset.busca;
+        document.getElementById('formRapida').submit();
+      });
+    });
+  </script>
+</body>
+</html>
